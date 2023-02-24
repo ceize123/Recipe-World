@@ -97,7 +97,7 @@ export default function RecipeDetail() {
         </section>
         {/* Instructions */}
       </>
-      {error && <div>Something went wrong...</div>}
+      {error && <div className='text-center'>Something went wrong...</div>}
     </div>
   )
 }

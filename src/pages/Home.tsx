@@ -86,7 +86,7 @@ export default function Home() {
           No Result found in this cuisine category
         </div>
       )}
-      {error && <div>Something went wrong...</div>}
+      {error && <div className='text-center'>Something went wrong...</div>}
     </>
   )
 }
