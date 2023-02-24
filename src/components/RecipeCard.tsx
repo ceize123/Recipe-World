@@ -1,29 +1,23 @@
-import { useNavigate } from 'react-router-dom'
 import { Recipe } from '../types'
 
-const RecipeCard: React.FC<Recipe> = ({ id, title, image }) => {
-  const navigate = useNavigate()
-  const routeChange = (recipeId: number) => {
-    console.log(recipeId)
-    const path = `/recipe/${recipeId}`
-    navigate(path)
-  }
-
+const RecipeCard: React.FC<Recipe> = ({ title, image }) => {
   return (
-    <div
-      key={id}
-      className='text-center flex flex-col bg-emerald-600 p-4 rounded-md cursor-pointer'
-      onClick={() => routeChange(id)}
-    >
-      <h2 className='mb-2'>{title}</h2>
-      <div className='w-full mt-auto overflow-hidden'>
-        <img
+    <>
+      <div className='overflow-hidden mb-2'>
+        <div
+          className='w-full h-0 pb-[100%] hover:scale-105 transition'
+          style={{
+            background: `url(${image}) no-repeat center center / cover`,
+          }}
+        ></div>
+        {/* <img
           src={image}
           alt={title}
           className='w-full h-auto max-w-[450px] mx-auto hover:scale-105 transition'
-        />
+        /> */}
       </div>
-    </div>
+      <h3>{title}</h3>
+    </>
   )
 }
 

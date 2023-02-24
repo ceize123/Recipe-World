@@ -7,6 +7,7 @@ import CuisineOption from '../components/CuisineOption'
 
 export default function Home() {
   const [loading, setLoading] = useState(false)
+  const [noResult, setNoResult] = useState(false)
   const [error, setError] = useState(false)
   const [target, setTarget] = useState<string>('')
   const [result, setResult] = useState<Recipe[]>([])
@@ -18,10 +19,15 @@ export default function Home() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
+    const query = e.target.recipe.value
+    setNoResult(false)
     setLoading(true)
+    setError(false)
+    setTarget(query)
     RecipeDataService.search(target)
       .then((res: any) => {
-        setResult(res.data.results)
+        if (res.data.results.length > 0) setResult(res.data.results)
+        else setNoResult(true)
         setLoading(false)
       })
       .catch(() => {
@@ -30,50 +36,55 @@ export default function Home() {
       })
   }
 
-  const handleSearchChange = (e: any) => {
-    setTarget(e.target.value)
-  }
-
   return (
     <>
       <section>
         <form className='text-center' onSubmit={(e) => handleSubmit(e)}>
-          <label className='block text-3xl' htmlFor='recipe'>
-            Recipe
+          <label className='block text-3xl font-bold mb-2' htmlFor='recipe'>
+            Recipe World
           </label>
           <input
             id='recipe'
             name='recipe'
-            className='border-2 h-10 pl-2'
+            className='border-2 rounded-tl rounded-bl h-10 pl-2 border-primary text-black'
             placeholder='pasta'
-            onChange={(e) => handleSearchChange(e)}
           />
           <button
             type='submit'
-            className='py-2 px-3 bg-black text-white disabled:bg-gray-400'
-            disabled={target.length === 0}
+            className='py-2 px-3 bg-primary rounded-tr rounded-br text-white'
           >
             Search
           </button>
         </form>
       </section>
-      {loading && <div className='text-center'>Loading...</div>}
-      {!loading && result.length > 0 && (
-        <section className='md:my-12 my-6 mx-3'>
+
+      <section className='md:my-12 my-6 mx-3'>
+        {result.length > 0 && (
           <CuisineOption
             query={target}
             setResult={setResult}
+            setNoResult={setNoResult}
             setLoading={setLoading}
             setError={setError}
           />
-          <RecipeList recipes={currentRecipes} />
-          <Pagination
-            totalRecipes={result.length}
-            recipesPerPage={recipePerPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
-        </section>
+        )}
+        {!loading && !noResult && result.length > 0 && (
+          <>
+            <RecipeList recipes={currentRecipes} />
+            <Pagination
+              totalRecipes={result.length}
+              recipesPerPage={recipePerPage}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+          </>
+        )}
+      </section>
+      {loading && <div className='text-center'>Loading...</div>}
+      {noResult && (
+        <div className='text-center'>
+          No Result found in this cuisine category
+        </div>
       )}
       {error && <div>Something went wrong...</div>}
     </>

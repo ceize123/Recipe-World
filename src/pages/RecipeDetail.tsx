@@ -10,9 +10,9 @@ export default function RecipeDetail() {
   const { id } = useParams<string | any>()
 
   useEffect(() => {
+    setError(false)
     RecipeDataService.getInfo(id)
       .then((res: any) => {
-        console.log(res.data)
         const { id, title, image, diets, extendedIngredients, instructions } =
           res.data
         const ingredients = extendedIngredients.map((obj: any) => ({
@@ -38,9 +38,9 @@ export default function RecipeDetail() {
     <div className='md:mx-5 mx-3'>
       <>
         <section>
-          <h1>{info.title}</h1>
-          <div className='flex items-center'>
-            <div className='mr-5'>
+          <h1 className='mb-4'>{info.title}</h1>
+          <div className='flex md:items-center md:flex-row flex-col'>
+            <div className='mr-5 mb-8 md:mb-0'>
               <img
                 src={info.image}
                 alt={info.title}
@@ -52,7 +52,7 @@ export default function RecipeDetail() {
               {info.diets.map((item, idx) => {
                 return (
                   <p key={`diets-${idx}`} className='flex items-center'>
-                    <AiOutlineCheckSquare />
+                    <AiOutlineCheckSquare className='mr-2' />
                     {item}
                   </p>
                 )
@@ -64,10 +64,10 @@ export default function RecipeDetail() {
         {/* Ingredients */}
         <section className='my-8'>
           <h2>Ingredients:</h2>
-          <table className='table-fixed border-separate border border-slate-400 w-2/3'>
-            <thead>
+          <table className='table-fixed border-separate border border-slate-400 md:w-2/3 w-full'>
+            <thead className='bg-primary'>
               <tr>
-                <th className='border border-slate-300 w-2/3'>Item</th>
+                <th className='border border-slate-300 sm:w-2/3'>Item</th>
                 <th className='border border-slate-300'>Amount</th>
                 <th className='border border-slate-300'>Unit</th>
               </tr>

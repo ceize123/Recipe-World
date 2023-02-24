@@ -38,6 +38,7 @@ export interface PaginationType {
 export interface Option {
   query: string
   setResult: Dispatch<SetStateAction<Recipe[]>>
+  setNoResult: Dispatch<SetStateAction<boolean>>
   setLoading: Dispatch<SetStateAction<boolean>>
   setError: Dispatch<SetStateAction<boolean>>
 }

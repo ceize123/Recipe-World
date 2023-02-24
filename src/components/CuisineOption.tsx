@@ -34,17 +34,23 @@ const cuisineAry = [
 const CuisineOption: React.FC<Option> = ({
   query,
   setResult,
-  setLoading,
   setError,
+  setLoading,
+  setNoResult,
 }) => {
   const handleSelect = (e: any) => {
     const option = e.target.value
+    setNoResult(false)
     setLoading(true)
+    setError(false)
+
     // if option is 'All', no need to filter
     if (option === 'All') {
       RecipeDataService.search(query)
         .then((res: any) => {
-          setResult(res.data.results)
+          if (res.data.results.length > 0) setResult(res.data.results)
+          else setNoResult(true)
+          setLoading(false)
         })
         .catch(() => {
           setLoading(false)
@@ -53,18 +59,22 @@ const CuisineOption: React.FC<Option> = ({
     } else {
       RecipeDataService.filter(query, option)
         .then((res: any) => {
-          setResult(res.data.results)
+          if (res.data.results.length > 0) setResult(res.data.results)
+          else setNoResult(true)
+          setLoading(false)
         })
         .catch(() => {
           setLoading(false)
           setError(true)
         })
     }
-    setLoading(false)
   }
   return (
-    <div className='mb-3'>
-      <select onChange={handleSelect} className='border'>
+    <div className='mb-3 text-black'>
+      <select
+        onChange={handleSelect}
+        className='border-2 border-primary rounded text-xl p-1'
+      >
         {cuisineAry.map((item, idx) => {
           return (
             <option key={idx} value={item}>

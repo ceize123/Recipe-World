@@ -24,8 +24,8 @@ const Pagination: React.FC<PaginationType> = ({
             onClick={() => {
               handleClick(page)
             }}
-            className={`py-1 px-2 border-2 border-black m-1 hover:bg-orange-300 ${
-              currentPage === idx + 1 ? 'bg-black text-white' : ''
+            className={`py-1 px-2 border-2 border-primary m-1 hover:bg-orange-300 ${
+              currentPage === idx + 1 ? 'bg-primary text-white' : ''
             }`}
           >
             {page}
