@@ -12,7 +12,6 @@ const Pagination: React.FC<PaginationType> = ({
   }
 
   const handleClick = (page: number) => {
-    console.log(page)
     if (setCurrentPage) setCurrentPage(page)
   }
   return (

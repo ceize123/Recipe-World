@@ -34,11 +34,3 @@ export interface PaginationType {
   currentPage: number
   setCurrentPage?: Dispatch<SetStateAction<number>>
 }
-
-export interface Option {
-  query: string
-  setResult: Dispatch<SetStateAction<Recipe[]>>
-  setNoResult: Dispatch<SetStateAction<boolean>>
-  setLoading: Dispatch<SetStateAction<boolean>>
-  setError: Dispatch<SetStateAction<boolean>>
-}

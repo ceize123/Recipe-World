@@ -47,17 +47,19 @@ export default function RecipeDetail() {
                 className='w-full h-auto max-w-[450px]'
               />
             </div>
-            <div>
-              <h2>Diets:</h2>
-              {info.diets.map((item, idx) => {
-                return (
-                  <p key={`diets-${idx}`} className='flex items-center'>
-                    <AiOutlineCheckSquare className='mr-2' />
-                    {item}
-                  </p>
-                )
-              })}
-            </div>
+            {info.diets.length > 0 && (
+              <div>
+                <h2>Diets:</h2>
+                {info.diets.map((item, idx) => {
+                  return (
+                    <p key={`diets-${idx}`} className='flex items-center'>
+                      <AiOutlineCheckSquare className='mr-2' />
+                      {item}
+                    </p>
+                  )
+                })}
+              </div>
+            )}
           </div>
         </section>
 

@@ -1,15 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import RecipeDataService from '../services/recipe.service'
 import { Recipe } from '../types'
 import Pagination from '../components/Pagination'
 import RecipeList from '../components/RecipeList'
-import CuisineOption from '../components/CuisineOption'
+import { cuisineAry } from '../cuisineAry'
 
 export default function Home() {
   const [loading, setLoading] = useState(false)
-  const [noResult, setNoResult] = useState(false)
   const [error, setError] = useState(false)
   const [target, setTarget] = useState<string>('')
+  const [option, setOption] = useState<string>('All')
   const [result, setResult] = useState<Recipe[]>([])
   const [currentPage, setCurrentPage] = useState<number>(1)
   const recipePerPage = 5
@@ -19,22 +19,39 @@ export default function Home() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    const query = e.target.recipe.value
-    setNoResult(false)
+    setTarget(e.target.recipe.value)
+  }
+
+  const handleFilter = (e: any) => {
+    setOption(e.target.value)
+  }
+
+  useEffect(() => {
     setLoading(true)
     setError(false)
-    setTarget(query)
-    RecipeDataService.search(target)
-      .then((res: any) => {
-        if (res.data.results.length > 0) setResult(res.data.results)
-        else setNoResult(true)
-        setLoading(false)
-      })
-      .catch(() => {
-        setLoading(false)
-        setError(true)
-      })
-  }
+    // if option is 'All', no need to filter
+    if (option === 'All') {
+      RecipeDataService.search(target)
+        .then((res: any) => {
+          setResult(res.data.results)
+          setLoading(false)
+        })
+        .catch(() => {
+          setLoading(false)
+          setError(true)
+        })
+    } else {
+      RecipeDataService.filter(target, option)
+        .then((res: any) => {
+          setResult(res.data.results)
+          setLoading(false)
+        })
+        .catch(() => {
+          setLoading(false)
+          setError(true)
+        })
+    }
+  }, [target, option])
 
   return (
     <>
@@ -55,20 +72,25 @@ export default function Home() {
           >
             Search
           </button>
+          <div className='mt-3 text-black'>
+            <select
+              onChange={handleFilter}
+              className='border-2 border-primary rounded text-lg p-1'
+            >
+              {cuisineAry.map((item, idx) => {
+                return (
+                  <option key={idx} value={item}>
+                    {item}
+                  </option>
+                )
+              })}
+            </select>
+          </div>
         </form>
       </section>
 
       <section className='md:my-12 my-6 mx-3'>
-        {result.length > 0 && (
-          <CuisineOption
-            query={target}
-            setResult={setResult}
-            setNoResult={setNoResult}
-            setLoading={setLoading}
-            setError={setError}
-          />
-        )}
-        {!loading && !noResult && result.length > 0 && (
+        {!loading && result.length > 0 && (
           <>
             <RecipeList recipes={currentRecipes} />
             <Pagination
@@ -81,7 +103,7 @@ export default function Home() {
         )}
       </section>
       {loading && <div className='text-center'>Loading...</div>}
-      {noResult && (
+      {!loading && result.length === 0 && (
         <div className='text-center'>
           No Result found in this cuisine category
         </div>
